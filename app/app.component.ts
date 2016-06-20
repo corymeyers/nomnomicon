@@ -1,33 +1,61 @@
-import { Component } from 'angular2/core';
+import { Component, EventEmitter } from 'angular2/core';
+
+@Component({
+  selector: 'nom-display',
+  inputs: ['nom'],
+  template:`
+  <h3>{{ nom.name }} - {{nom.details}} - {{nom.calories}} calories</h3>
+  `
+})
+
+export class NomComponent {
+  public nom: Nom;
+}
 
 @Component({
   selector: 'nom-list',
   inputs: ['nomList'],
+  outputs: ['onNomSelect'],
+  directives: [NomComponent],
   template: `
-  <h3 *ngFor="#currentNom of nomList" (click)="nomClicked(currentNom)">
-    {{currentNom.description}}{{currentNom.details}}{{currentNom.calories}}
-  </h3>
+    <nom-display *ngFor="#currentNom of nomList"
+      (click)="nomClicked(currentNom)"
+      [class.selected]='currentNom === selectedNom'
+      [nom]="currentNom">
+    </nom-display>
   `
 })
 
 export class NomListComponent {
   public nomList: Nom[];
+  public onNomSelect: EventEmitter<Nom>;
+  public selectedNom: Nom;
+  constructor() {
+    this.onNomSelect = new EventEmitter();
+  }
+  nomClicked(clickedNom: Nom): void {
+    console.log('child', clickedNom);
+    this.selectedNom= clickedNom;
+    this.onNomSelect.emit(clickedNom);
+  }
 }
 
 @Component({
   selector: 'my-app',
+  directives: [NomListComponent],
   template: `
     <div class="container">
       <h1>Nomnomicon</h1>
-      <h3 *ngFor=""#nom of noms" (click)="nomWasSelected(nom)">
-        {{nom.name}}{{nom.details}}{{nom.calories}}
-      </h3>
+      <nom-list
+        [nomList]="noms"
+        (onNomSelect)="nomWasSelected($event)">
+      </nom-list>
     </div>
   `
 })
 
 export class AppComponent {
-  public noms: Nom[
+  public noms: Nom[];
   constructor(){
     this.noms = [
       new Nom("apple", "it was red", 50),
@@ -36,7 +64,7 @@ export class AppComponent {
     ];
   }
   nomWasSelected(clickedNom: Nom): void {
-    console.log(clickedNom);
+    console.log('parent', clickedNom);
   }
 }
 
