@@ -1,5 +1,5 @@
-import { Component } from 'angular2/core';
-import { Nom } from './nom-model';
+import { Component, EventEmitter } from 'angular2/core';
+import { Nom } from './nom.model';
 
 @Component({
     selector: 'nom-display',
