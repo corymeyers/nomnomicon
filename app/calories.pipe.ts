@@ -2,8 +2,10 @@ import {Pipe, PipeTransform} from 'angular2/core';
 import {Nom} from './nom.model';
 
 @Pipe({
-
+  name: "calories",
+  pure: false
 })
+
 export class CaloriesPipe implements PipeTransform {
   transform(input: Nom[], args) {
 

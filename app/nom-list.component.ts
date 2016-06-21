@@ -9,7 +9,7 @@ import { CaloriesPipe } from './calories.pipe';
   selector: 'nom-list',
   inputs: ['nomList'],
   outputs: ['onNomSelect'],
-  pipes: [CaloriesPipe]
+  pipes: [CaloriesPipe],
   directives: [NomComponent, EditNomDetailsComponent, NewNomComponent],
   template: `
   <select (change)="onChange($event.target.value)">
@@ -17,12 +17,15 @@ import { CaloriesPipe } from './calories.pipe';
     <<option value="healthy">Healthy Ones</option>
     <option value="unhealthy">Unhealthy Ones</option>
   </select>
-  <nom-display *ngFor="#currentNom of nomList"
+
+  <nom-display *ngFor="#currentNom of nomList | calories:filterCalories"
     (click)="nomClicked(currentNom)"
     [class.selected]="currentNom === selectedNom"
     [nom]="currentNom">
   </nom-display>
+
   <edit-nom-details *ngIf="selectedNom" [nom]="selectedNom"> </edit-nom-details>
+  
   <new-nom (onSubmitNewNom)="createNom($event)"></new-nom>
   `
 })
@@ -36,7 +39,6 @@ export class NomListComponent {
     this.onNomSelect = new EventEmitter();
   }
   nomClicked(clickedNom: Nom): void {
-    console.log('child', clickedNom);
     this.selectedNom= clickedNom;
     this.onNomSelect.emit(clickedNom);
   }
@@ -45,6 +47,5 @@ export class NomListComponent {
   }
   onChange(filterOption){
     this.filterCalories = filterOption;
-    console.log(this.filterCalories);
   }
 }
