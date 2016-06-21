@@ -10,3 +10,8 @@ h1 {
    background-color: black;
    width: 100%;
  }
+
+ .nom-form {
+   margin-top: 80px;
+   margin-bottom: 80px;
+ }
